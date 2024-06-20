@@ -16,9 +16,14 @@ final routesConfig = GoRouter(routes: [
   builder: (context, state) => const CreteUpdateView(), 
   ),
   GoRoute(path: AppRoutes.productList,
-  builder: (context, state) => const ProductListView()
+  builder: (context, state) => const ProductsListView()
   ), 
-  GoRoute(path: AppRoutes.productDetail,
-  builder: (context, state) => const ProductDetailView(), 
+  GoRoute(
+    //path: AppRoutes.productDetail,
+   path: '${AppRoutes.productDetail}/:productId', 
+   builder: (context, state) => ProductDetailView(
+    productId: state.pathParameters['productId'],
+   ), 
+    // Suggested code may be subject to a license. Learn more: ~LicenseLog:3517544961. 
   ),
 ]);

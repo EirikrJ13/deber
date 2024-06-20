@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:myapp/widgets/drawer_widget.dart';
 
 class ProductDetailView extends StatelessWidget {
-  const ProductDetailView({Key? key}) : super(key: key);
+  const ProductDetailView({Key? key, String? productId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

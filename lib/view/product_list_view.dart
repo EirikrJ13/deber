@@ -1,36 +1,72 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/widgets/drawer_widget.dart';
-import 'package:myapp/widgets/product_list_widget.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:myapp/types/product.dart';
 
-class ProductListView extends StatelessWidget {
-  const ProductListView({Key? key}) : super(key: key);
+import '../providers/product_provider.dart';
+import '../widgets/card_item_product.dart';
+import '../widgets/drawer_widget.dart';
+
+class ProductsListView extends ConsumerWidget {
+  const ProductsListView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final products = [
-      {
-        'name': 'Lamborghini Huracán',
-        'description': 'El Lamborghini Huracán es el acuerdo ideal entre tecnología y diseño. La primera emoción se siente con solo mirarlo. Líneas definidas y aerodinámicas diseñadas para contrarrestar el aire y domar la carretera.',
-        'imageUrl': 'https://www.digitaltrends.com/wp-content/uploads/2019/01/lamborghini_huracan_evo_street_2.jpg?resize=625%2C417&p=1',
-      },
-      // Agregar más:
-    ];
+  Widget build(BuildContext context, WidgetRef ref) {
+    final productProv = ref.watch(productsProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Product List View"),
+        title: const Text("List products View"),
       ),
       drawer: const DrawerWidget(),
-      body: ListView.builder(
-        itemCount: products.length,
-        itemBuilder: (context, index) {
-          final product = products[index];
-          return ProductListWidget(
-            name: product['name']!,
-            description: product['description']!,
-            imageUrl: product['imageUrl']!,
-          );
-        },
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            ...productProv.when(
+              data: (List<Product> lp) {
+                return lp.map((product) {
+                  return CardItemProduct(
+                    url: product.urlImage,
+                    name: product.name,
+                    price: product.price,
+                    stock: product.stock,
+                    description: product.description,
+                  );
+                }).toList();
+              },
+              error: (obj, err) => [Text(err.toString()), const Text('===='), Text(obj.toString())],
+              loading: () => [const CircularProgressIndicator()],
+            )
+            // ...[ Text("1"), Text("2") ]
+            // CardItemProduct(
+            //   url: "https://images.unsplash.com/photo-1707767787271-b00e648a61e4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8fHx8fHx8MTcxNzYzMTgzMw&ixlib=rb-4.0.3&q=80&w=200",
+            //   description: "Descripción",
+            //   name: "Producto 1",
+            //   price: 5.25,
+            //   stock: 10,
+            // ),
+            // CardItemProduct(
+            //   url: "https://images.unsplash.com/photo-1707767787271-b00e648a61e4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8fHx8fHx8MTcxNzYzMTgzMw&ixlib=rb-4.0.3&q=80&w=200",
+            //   description: "Descripción",
+            //   name: "Producto 1",
+            //   price: 5.25,
+            //   stock: 10,
+            // ),
+            // CardItemProduct(
+            //   url: "https://images.unsplash.com/photo-1707767787271-b00e648a61e4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8fHx8fHx8MTcxNzYzMTgzMw&ixlib=rb-4.0.3&q=80&w=200",
+            //   description: "Descripción",
+            //   name: "Producto 1",
+            //   price: 5.25,
+            //   stock: 10,
+            // ),
+            // CardItemProduct(
+            //   url: "https://images.unsplash.com/photo-1707767787271-b00e648a61e4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8fHx8fHx8MTcxNzYzMTgzMw&ixlib=rb-4.0.3&q=80&w=200",
+            //   description: "Descripción",
+            //   name: "Producto 1",
+            //   price: 5.25,
+            //   stock: 10,
+            // ),
+          ],
+        ),
       ),
     );
   }
