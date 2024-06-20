@@ -17,61 +17,64 @@ class CardItemProduct extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 10,
-        vertical: 5,
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(40),
-        child:  Container(
-          color: Colors.grey[200],
-          // padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Image.network(
-                url,
-                height: 220,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => const Center(
-                  child: Icon(Icons.error),
+    return GestureDetector(
+      onTap: () => print('${name} selected'),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 10,
+          vertical: 5,
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(40),
+          child:  Container(
+            color: Colors.grey[200],
+            // padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Image.network(
+                  url,
+                  height: 220,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => const Center(
+                    child: Icon(Icons.error),
+                  ),
                 ),
-              ),
-              Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(
-                      name,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16.0,
+                Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                        name,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16.0,
+                        ),
                       ),
-                    ),
-                    Text(
-                      '\$ $price',
-                      style: TextStyle(
-                        color: Colors.grey[600],
+                      Text(
+                        '\$ $price',
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                        ),
                       ),
-                    ),
-                    Text(
-                      '$stock',
-                      style: TextStyle(
-                        color: Colors.grey[600],
+                      Text(
+                        '$stock',
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                        ),
                       ),
-                    ),
-                    Text(
-                      description,
-                      style: TextStyle(
-                        color: Colors.grey[600],
+                      Text(
+                        description,
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              )
-            ],
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),
