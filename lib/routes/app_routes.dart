@@ -4,7 +4,7 @@ import 'package:myapp/view/index.dart';
 class AppRoutes {
   static String home = "/";
   static String creteUpdate = "/crete-update";
-  static String productDetail = "/product-detail";
+  static String productDetail= "/product-detail-view";
   static String productList = "/product-list";
 }
 
@@ -13,7 +13,7 @@ final routesConfig = GoRouter(routes: [
   builder: (context, state) => const HomeView(), 
   ),
   GoRoute(path: AppRoutes.creteUpdate,
-  builder: (context, state) => const CreteUpdateView(), 
+  builder: (context, state) => const CreateUpdateView(), 
   ),
   GoRoute(path: AppRoutes.productList,
   builder: (context, state) => const ProductsListView()

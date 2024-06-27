@@ -12,7 +12,7 @@ class Product {
     String id;
     String name;
     double price;
-    int stock;
+    double stock;
     String urlImage;
     String description;
     int v;
@@ -38,12 +38,10 @@ class Product {
     );
 
     Map<String, dynamic> toJson() => {
-        "_id": id,
         "name": name,
         "price": price,
         "stock": stock,
         "urlImage": urlImage,
         "description": description,
-        "__v": v,
     };
 }
