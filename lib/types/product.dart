@@ -2,11 +2,11 @@
 //
 //     final product = productFromJson(jsonString);
 
-import 'dart:convert';
+//import 'dart:convert';
 
-List<Product> productFromJson(String str) => List<Product>.from(json.decode(str).map((x) => Product.fromJson(x)));
+//List<Product> productFromJson(String str) => List<Product>.from(json.decode(str).map((x) => Product.fromJson(x)));
 
-String productToJson(List<Product> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+//String productToJson(List<Product> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class Product {
     String id;
@@ -30,8 +30,8 @@ class Product {
     factory Product.fromJson(Map<String, dynamic> json) => Product(
         id: json["_id"],
         name: json["name"],
-        price: json["price"]?.toDouble(),
-        stock: json["stock"],
+         price: json["price"]?.toDouble(),
+        stock: json["stock"]?.toDouble(),
         urlImage: json["urlImage"],
         description: json["description"],
         v: json["__v"],
