@@ -13,10 +13,7 @@ final routesConfig = GoRouter(routes: [
   builder: (context, state) => const HomeView(), 
   ),
   GoRoute(path: AppRoutes.creteUpdate,
-  builder: (context, state) {
-        final productId = state.uri.queryParameters['productId'];
-        return CreateUpdateView(productId: productId);
-      },
+  builder: (context, state) => CreateUpdateView(productId: state.uri.queryParameters["productId"]),
   ),
   GoRoute(path: AppRoutes.productList,
   builder: (context, state) => const ProductsListView()

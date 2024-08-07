@@ -9,15 +9,16 @@ class CardItemProduct extends StatelessWidget {
   final double price;
   final double stock;
   final String description;
+
   const CardItemProduct({
-    super.key,
+    Key? key,
     required this.id,
     required this.url,
     required this.name,
     required this.price,
     required this.stock,
     required this.description,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,56 +28,78 @@ class CardItemProduct extends StatelessWidget {
         vertical: 5,
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(40),
-        child:  Container(
-          color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(15),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 5,
+                offset: Offset(0, 2),
+              ),
+            ],
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.network(
-                url,
-                height: 220,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => const Center(
-                  child: Icon(Icons.error),
+              Container(
+                color: Colors.blueAccent,
+                child: Image.network(
+                  url,
+                  height: 220,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => const Center(
+                    child: Icon(Icons.error, color: Colors.red),
+                  ),
                 ),
               ),
               GestureDetector(
                 onTap: () => context.go('${AppRoutes.productDetail}/$id'),
-                child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         name,
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
+                          fontSize: 18.0,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        '\$ $price',
+                        style: const TextStyle(
+                          color: Colors.green,
                           fontSize: 16.0,
                         ),
                       ),
+                      const SizedBox(height: 5),
                       Text(
-                        '\$ $price',
-                        style: TextStyle(
-                          color: Colors.grey[600],
+                        'Stock: $stock',
+                        style: const TextStyle(
+                          color: Colors.black54,
+                          fontSize: 14.0,
                         ),
                       ),
-                      Text(
-                        '$stock',
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                        ),
-                      ),
+                      const SizedBox(height: 10),
                       Text(
                         description,
-                        style: TextStyle(
-                          color: Colors.grey[600],
+                        style: const TextStyle(
+                          color: Colors.black54,
+                          fontSize: 14.0,
                         ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),

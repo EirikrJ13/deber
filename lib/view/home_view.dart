@@ -7,31 +7,48 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Home View"),),
+      appBar: AppBar(
+        title: const Text("AutoStore"),
+        backgroundColor: Colors.deepPurple,
+        elevation: 0,
+      ),
       drawer: const DrawerWidget(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.network(
-              'https://cdn.autobild.es/sites/navi.axelspringer.es/public/media/image/2017/05/635741-este-lamborghini-350-gt-pertenecio-ferruccio-lamborghini.jpg',
-              width: 290,
-              height: 200,
-            ),
-            SizedBox(height: 1), 
-            Text(
-              'Valiente, Auténtico e Inesperado.',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+            ClipRRect(
+              borderRadius: BorderRadius.circular(15.0),
+              child: Image.network(
+                'https://s1.1zoom.me/big0/880/Lamborghini_Lamborghini_445073.jpg',
+                width: 300,
+                height: 200,
+                fit: BoxFit.cover,
               ),
             ),
-            SizedBox(height: 25),
+            const SizedBox(height: 20), 
             Text(
-              'Compras un Lamborghini cuando eres alguien.',
-              style: TextStyle(
-                fontSize: 20,
-                color: Color.fromARGB(255, 15, 19, 219),
+              'Valiente, Auténtico e Inesperado.',
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 26,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
+            const SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Text(
+                'Un coche vendido hoy es el comienzo de una travesía inolvidable mañana.',
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 20,
+                  color: Colors.deepPurple,
+                  fontStyle: FontStyle.italic,
+                  height: 1.5,
+                ),
               ),
             ),
           ],

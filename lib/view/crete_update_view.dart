@@ -1,109 +1,158 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:myapp/providers/product_provider.dart';
+import 'package:myapp/routes/app_routes.dart';
 import 'package:myapp/types/product.dart';
-import 'package:myapp/widgets/drawer_widget.dart';
-import 'package:myapp/widgets/product_form_fields.dart';
 
 
-class CreateUpdateView extends ConsumerStatefulWidget {
+import '../widgets/drawer_widget.dart';
+
+class CreateUpdateView extends ConsumerWidget {
   final String? productId;
-
-
-  const CreateUpdateView({Key? key, this.productId}) : super(key: key);
-  @override
-  ConsumerState<CreateUpdateView> createState() => _CreateUpdateViewState();
-}
-
-class _CreateUpdateViewState extends ConsumerState<CreateUpdateView> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _stockController = TextEditingController();
-  final TextEditingController _priceController = TextEditingController();
-  final TextEditingController _urlImageController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
+  const CreateUpdateView({super.key, this.productId});
 
   @override
-  void initState() {
-    super.initState();
-    if (widget.productId != null) {
-      _loadProductData(widget.productId!);
-    }
-  }
+  Widget build(BuildContext context, WidgetRef ref) {
+    final TextEditingController nameCtrl = TextEditingController();
+    final TextEditingController priceCtrl = TextEditingController();
+    final TextEditingController stockCtrl = TextEditingController();
+    final TextEditingController urlImageCtrl = TextEditingController();
+    final TextEditingController descriptionCtrl = TextEditingController();
 
-  Future<void> _loadProductData(String productId) async {
-    try {
-      final product = await ref.read(productByIdProvider(productId).future);
-      setState(() {
-        _nameController.text = product.name;
-        _stockController.text = product.stock.toString();
-        _priceController.text = product.price.toString();
-        _urlImageController.text = product.urlImage;
-        _descriptionController.text = product.description;
-      });
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Failed to load product data: $e'),
-      ));
-    }
-  }
+    final productIdProv = productId == null
+        ? ref.watch(productEmptyProvider)
+        : ref.watch(productByIdProvider(productId!));
 
-  Future<void> _createOrUpdateProduct() async {
-    try {
-      final String name = _nameController.text;
-      final double stock = double.parse(_stockController.text);
-      final double price = double.parse(_priceController.text);
-      final String urlImage = _urlImageController.text;
-      final String description = _descriptionController.text;
-
-      final product = Product(
-        id: widget.productId ?? '',
-        name: name,
-        stock: stock,
-        price: price,
-        urlImage: urlImage,
-        description: description,
-        v: 0,
-      );
-
-       if (widget.productId == null) {
-        final createProduct = ref.read(createProductProvider);
-        await createProduct(product);
-      } else {
-        final updateProduct = ref.read(updateProductProvider);
-        await updateProduct(product);
-      }
-
-      Navigator.of(context).pop();
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Failed to create or update product: $e'),
-      ));
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const DrawerWidget(),
       appBar: AppBar(
-        title: const Text('Create/Update'),
+        title: Text(productId == null ? "Create Product" : "Update Product"),
+        backgroundColor: Colors.deepPurple,
+        elevation: 0,
       ),
-      body: Container(
-        padding: const EdgeInsets.all(20.0),
+      drawer: const DrawerWidget(),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          children:  <Widget>[
-            ProductFormFields(
-              nameController: _nameController,
-              stockController: _stockController,
-              priceController: _priceController,
-              urlImageController: _urlImageController,
-              descriptionController: _descriptionController,
-            ),
-            ElevatedButton(
-              onPressed: _createOrUpdateProduct,
-              child: const Text('Save'),
-            ),
+          children: [
+            Form(
+              child: Column(
+                children: [
+                  productIdProv.when(
+                      data: (product) {
+                        if(productId != null){
+                          // Update inputs controllers
+                          nameCtrl.text = product.name;
+                          priceCtrl.text = product.price.toString();
+                          stockCtrl.text = product.stock.toString();
+                          urlImageCtrl.text = product.urlImage;
+                          descriptionCtrl.text = product.description;
+                        }
+                        return Column(
+                          children: [
+                            _buildTextField(
+                              icon: Icons.drive_file_rename_outline,
+                              hintText: 'Product Name',
+                              controller: nameCtrl,
+                            ),
+                            _buildTextField(
+                              icon: Icons.attach_money,
+                              hintText: 'Price',
+                              controller: priceCtrl,
+                              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                            ),
+                            _buildTextField(
+                              icon: Icons.storage,
+                              hintText: 'Stock',
+                              controller: stockCtrl,
+                              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                            ),
+                            _buildTextField(
+                              icon: Icons.image,
+                              hintText: 'Image URL',
+                              controller: urlImageCtrl,
+                            ),
+                            _buildTextField(
+                              icon: Icons.description,
+                              hintText: 'Description',
+                              controller: descriptionCtrl,
+                            ),
+                          ],
+                        );
+                      },
+                      error: (err, trc) {
+                        return Column(
+                          children: [Text('$err'), Text('$trc')],
+                        );
+                      },
+                      loading: () => const Center(child: CircularProgressIndicator())),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20.0),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.deepPurple, // Background color
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0)),
+                          padding: const EdgeInsets.symmetric(vertical: 16.0)),
+                      onPressed: () async {
+                        final Product productSubmit = Product(
+                            id: productId ?? '',
+                            name: nameCtrl.text,
+                            price: double.parse(priceCtrl.text),
+                            stock: double.parse(stockCtrl.text),
+                            urlImage: urlImageCtrl.text,
+                            description: descriptionCtrl.text,
+                            v: 0);
+
+                        if(productId == null){
+                          // Crear
+                          ref.read(createProductProvider(productSubmit));
+                        } else {
+                          // Actualizar
+                          ref.read(updateProductProvider(productSubmit));
+                        }
+
+                        context.push(AppRoutes.productList);
+                        ref.invalidate(productsProvider);
+                      },
+                      child: Text(
+                        productId == null ? 'Create' : 'Update',
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required IconData icon,
+    required String hintText,
+    required TextEditingController controller,
+    TextInputType? keyboardType,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextField(
+        controller: controller,
+        keyboardType: keyboardType,
+        decoration: InputDecoration(
+          prefixIcon: Icon(icon, color: Colors.deepPurple),
+          hintText: hintText,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8.0),
+            borderSide: const BorderSide(color: Colors.deepPurple),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8.0),
+            borderSide: const BorderSide(color: Colors.deepPurple, width: 2.0),
+          ),
+          contentPadding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0),
         ),
       ),
     );

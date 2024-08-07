@@ -14,8 +14,11 @@ class ProductDetailView extends ConsumerWidget {
     // Asegurarse con un print
     final productByidRef = ref.watch(productByIdProvider(productId ?? ''));
     return Scaffold(
+      
       appBar: AppBar(
         title: const Text("Product Detail View"),
+        backgroundColor: Colors.deepPurple,
+        elevation: 0,
       ),
       drawer: const DrawerWidget(),
       body: productByidRef.when(

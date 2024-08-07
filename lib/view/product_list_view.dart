@@ -16,6 +16,8 @@ class ProductsListView extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("List products View"),
+        backgroundColor: Colors.deepPurple,
+        elevation: 0,
       ),
       drawer: const DrawerWidget(),
       body: SingleChildScrollView(
